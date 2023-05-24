@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 const ReservationCard = () => {
   return (
     <div className="fixed w-[15%] bg-white rounded p-3 shadow">
@@ -27,9 +29,11 @@ const ReservationCard = () => {
         </div>
       </div>
       <div className="mt-5">
-        <button className="bg-red-600 rounded w-full px-4 text-white font-bold h-16">
-          Find a Time
-        </button>
+        <Link href="/reserve/1">
+          <button className="bg-red-600 rounded w-full px-4 text-white font-bold h-16">
+            Find a Time
+          </button>
+        </Link>
       </div>
     </div>
   );
