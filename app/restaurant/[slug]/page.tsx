@@ -9,7 +9,7 @@ import Title from "./components/Title";
 
 const prisma = new PrismaClient();
 
-export interface RestaurantDetailsType {
+export interface Restaurant {
   id: number;
   name: string;
   description: string;
@@ -17,10 +17,11 @@ export interface RestaurantDetailsType {
   location: {
     name: string;
   };
+  slug: string;
 }
 
-const fetchRestaurantBySlug = async (slug: string) => {
-  const restaurants = await prisma.restaurant.findUnique({
+const fetchRestaurantBySlug = async (slug: string): Promise<Restaurant> => {
+  const restaurant = await prisma.restaurant.findUnique({
     where: {
       slug: slug,
     },
@@ -30,10 +31,15 @@ const fetchRestaurantBySlug = async (slug: string) => {
       description: true,
       images: true,
       location: true,
+      slug: true,
     },
   });
 
-  return restaurants;
+  if (!restaurant) {
+    throw new Error("No restaurant found");
+  }
+
+  return restaurant;
 };
 
 export default async function RestaurantDetails({
@@ -42,16 +48,15 @@ export default async function RestaurantDetails({
   params: { slug: string };
 }) {
   const restaurant = await fetchRestaurantBySlug(params.slug);
-  console.log(params.slug);
-  console.log(restaurant);
+
   return (
     <>
       <div className="bg-white w-[70%] ounded p-3 shadow">
-        <RestaurantNavBar />
-        <Title />
+        <RestaurantNavBar slug={restaurant.slug} />
+        <Title name={restaurant.name} />
         <Rating />
-        <Description />
-        <Images />
+        <Description description={restaurant.description} />
+        <Images images={restaurant.images} />
         <Reviews />
       </div>
       <div className="w-[27%] relative text-reg">
