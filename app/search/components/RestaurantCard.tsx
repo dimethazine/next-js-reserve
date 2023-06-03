@@ -1,19 +1,27 @@
+import { Cuisine, Location, PRICE } from "@prisma/client";
 import Link from "next/link";
 import React from "react";
+import Price from "../../components/Price";
 
-const RestaurantCard = () => {
+interface Restaurant {
+  id: number;
+  name: string;
+  cuisine: Cuisine;
+  location: Location;
+  slug: string;
+  main_image: string;
+  price: PRICE;
+}
+
+const RestaurantCard = ({ restaurant }: { restaurant: Restaurant }) => {
   return (
-    <div className="border-b flex pb-5">
-      <Link href="/restaurant/1">
-        <img
-          src="https://resizer.otstatic.com/v2/photos/xsmall/1/23695933.jpg"
-          alt=""
-          className="w-56 rounded"
-        />
+    <div className="border-b flex pb-5 ml-4">
+      <Link href={`/restaurant/${restaurant.slug}`}>
+        <img src={restaurant.main_image} alt="" className="w-44 h-36 rounded" />
       </Link>
       <div className="pl-5">
-        <Link href="/restaurant/1">
-          <h2 className="text-3xl">Gratzzi Grille</h2>
+        <Link href={`/restaurant/${restaurant.slug}`}>
+          <h2 className="text-3xl">{restaurant.name}</h2>
         </Link>
         <div className="flex items-start">
           <div className="flex mb-2">★★★★☆</div>
@@ -27,13 +35,15 @@ const RestaurantCard = () => {
         </div>
         <div className="mb-9">
           <div className="font-light flex text-reg">
-            <p className="mr-4">$$$</p>
-            <p className="mr-4">Mexican</p>
-            <p className="mr-4">Tampa</p>
+            <Price price={restaurant.price} />
+            <p className="mr-4 capitalize">{restaurant.cuisine.name}</p>
+            <p className="mr-4 capitalize">{restaurant.location.name}</p>
           </div>
         </div>
         <div className="text-red-600">
-          <Link href="/restaurant/1">View more information</Link>
+          <Link href={`/restaurant/${restaurant.slug}`}>
+            View more information
+          </Link>
         </div>
       </div>
     </div>

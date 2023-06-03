@@ -1,22 +1,41 @@
+import { PrismaClient } from "@prisma/client";
 import React from "react";
 
-const SearchSideBar = () => {
+const prisma = new PrismaClient();
+
+const fetchLocations = async () => {
+  const locations = await prisma.location.findMany();
+  return locations;
+};
+
+const fetchCuisines = async () => {
+  const cuisine = await prisma.cuisine.findMany();
+  return cuisine;
+};
+
+const SearchSideBar = async () => {
+  const c = await fetchLocations();
+  const b = await fetchCuisines();
   return (
     <div className="w-1/5">
       <div className="border-b pb-4">
         <h1 className="mb-2">Regions</h1>
-        <p className="font-light text-reg">Tampa</p>
-        <p className="font-light text-reg">Clearwater</p>
-        <p className="font-light text-reg">Safety Harbor</p>
-        <p className="font-light text-reg">Palm Harbor</p>
-        <p className="font-light text-reg">St Petersburg</p>
-        <p className="font-light text-reg">Largo</p>
+
+        <p className="font-light text-reg capitalize">
+          {c.map((location) => (
+            <p>{location.name}</p>
+          ))}
+        </p>
       </div>
+
       <div className="border-b pb-4 mt-3 ">
         <h1 className="mb-2">Cuisine</h1>
-        <p className="font-light text-reg ">Mexican</p>
-        <p className="font-light text-reg">Italian</p>
-        <p className="font-light text-reg">Chinese</p>
+
+        <p className="font-light text-reg capitalize">
+          {b.map((cuisine) => (
+            <p>{cuisine.name}</p>
+          ))}
+        </p>
       </div>
       <div className="mt-3 pb-4">
         <h1 className="mb-2">Price</h1>
